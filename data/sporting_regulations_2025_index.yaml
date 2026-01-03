@@ -1,0 +1,365 @@
+document:
+  title: FIA Formula 1 Sporting Regulations
+  season: 2025
+  issue: 4
+  scope: Sporting
+  language: en
+  source: FIA official regulations
+
+structure:
+  articles:
+    - article: 1
+      title: Regulations
+      category: regulatory_framework
+      description: Defines the regulatory authority and applicable documents
+      file: SR2025_A01_regulations.md
+
+    - article: 2
+      title: General undertaking
+      category: regulatory_framework
+      description: Obligations and commitments of competitors and participants
+      file: SR2025_A02_general_undertaking.md
+
+    - article: 3
+      title: General conditions
+      category: regulatory_framework
+      description: General conditions governing participation and compliance
+      file: SR2025_A03_general_conditions.md
+
+    - article: 4
+      title: Licences
+      category: championship_structure
+      file: SR2025_A04_licences.md
+
+    - article: 5
+      title: Championship competitions
+      category: championship_structure
+      file: SR2025_A05_championship_competitions.md
+
+    - article: 6
+      title: World Championship
+      category: championship_structure
+      structured_data:
+        csv: SR2025_A06_points.csv
+        csv: SR2025_A06_points_sprint_session.csv
+        csv: SR2025_A06_points_race_distance.csv
+      file: SR2025_A06_world_championship.md
+
+    - article: 7
+      title: Dead heat
+      category: championship_structure
+      file: SR2025_A07_dead_heat.md
+
+    - article: 8
+      title: Competitors applications
+      category: entries_and_identity
+      file: SR2025_A08_competitors_applications.md
+
+    - article: 9
+      title: Car livery and competition numbers
+      category: entries_and_identity
+      file: SR2025_A09_car_livery_numbers.md
+
+    - article: 10
+      title: Track running time outside a competition
+      category: entries_and_identity
+      file: SR2025_A10_track_running_outside_competition.md
+
+    - article: 11
+      title: Promoter
+      category: event_organisation
+      file: SR2025_A11_promoter.txt
+
+    - article: 12
+      title: Organisation of competitions
+      category: event_organisation
+      file: SR2025_A12_organisation_of_competitions.txt
+
+    - article: 13
+      title: Insurance
+      category: event_organisation
+      file: SR2025_A13_insurance.txt
+
+    - article: 14
+      title: FIA delegates
+      category: event_organisation
+      file: SR2025_A14_fia_delegates.txt
+
+    - article: 15
+      title: Officials
+      category: event_organisation
+      file: SR2025_A15_officials.md
+
+    - article: 16
+      title: Instructions and communications to competitors
+      category: event_organisation
+      file: SR2025_A16_instructions_and_communications.txt
+
+    - article: 17
+      title: Protests, appeals and right of review
+      category: disciplinary
+      file: SR2025_A17_protests_appeals.md
+
+    - article: 18
+      title: Sanctions
+      category: disciplinary
+      structured_data:
+        json: SR2025_A18_sanctions_catalog.json
+      file: SR2025_A18_sanctions.txt
+
+    - article: 19
+      title: Press conferences, media opportunities, driver activities and national anthem
+      category: media_and_protocol
+      file: SR2025_A19_media_and_protocol.md
+
+    - article: 20
+      title: Meetings
+      category: event_organisation
+      file: SR2025_A20_meetings.txt
+
+    - article: 21
+      title: Covering of components during a competition
+      category: operational_constraints
+      file: SR2025_A21_covering_components.md
+
+    - article: 22
+      title: Driver adjustable bodywork
+      category: operational_constraints
+      file: SR2025_A22_driver_adjustable_bodywork.md
+
+    - article: 23
+      title: Operational personnel during a competition
+      category: operational_constraints
+      file: SR2025_A23_operational_personnel.md
+
+    - article: 24
+      title: Competitor factory shutdown periods
+      category: operational_constraints
+      file: SR2025_A24_factory_shutdown.md
+
+    - article: 25
+      title: Power unit manufacturer shutdown periods
+      category: operational_constraints
+      file: SR2025_A25_pu_manufacturer_shutdown.md
+
+    - article: 26
+      title: General safety
+      category: safety
+      file: SR2025_A26_general_safety.md
+
+    - article: 27
+      title: Spare cars
+      category: technical_operations
+      file: SR2025_A27_spare_cars.md
+
+    - article: 28
+      title: Power unit usage
+      category: technical_operations
+      file: SR2025_A28_power_unit_usage.txt
+
+    - article: 30
+      title: Supply of tyres and tyre limitations
+      category: technical_operations
+      file: SR2025_A30_tyre_supply_limits.md
+
+    - article: 31
+      title: Scrutineering
+      category: scrutineering
+      file: SR2025_A31_scrutineering.md
+
+    - article: 32
+      title: Changes of driver
+      category: scrutineering
+      file: SR2025_A32_driver_changes.md
+
+    - article: 33
+      title: Driving
+      category: driving_and_pitlane
+      file: SR2025_A33_driving.txt
+
+    - article: 34
+      title: Pit entry road, pit lane and pit exit road
+      category: driving_and_pitlane
+      file: SR2025_A34_pitlane.md
+
+    - article: 35
+      title: Weighing
+      category: driving_and_pitlane
+      file: SR2025_A35_weighing.md
+
+    - article: 36
+      title: Refuelling
+      category: driving_and_pitlane
+      file: SR2025_A36_refuelling.md
+
+    - article: 37
+      title: Practice sessions
+      category: sessions
+      file: SR2025_A37_practice_sessions.md
+
+    - article: 38
+      title: Free practice
+      category: sessions
+      file: SR2025_A38_free_practice.md
+
+    - article: 39
+      title: Qualifying and sprint qualifying sessions
+      category: sessions
+      file: SR2025_A39_qualifying.md
+
+    - article: 40
+      title: Pre-sprint and pre-race parc fermé
+      category: sessions
+      file: SR2025_A40_parc_ferme_pre_sessions.md
+
+    - article: 42
+      title: The grid for the sprint or the race
+      category: starting_procedures
+      file: SR2025_A42_grid.md
+
+    - article: 43
+      title: Sprint session starting procedure
+      category: starting_procedures
+      file: SR2025_A43_sprint_start.md
+
+    - article: 44
+      title: Race starting procedure
+      category: starting_procedures
+      file: SR2025_A44_race_start.md
+
+    - article: 45
+      title: Extra formation lap
+      category: starting_procedures
+      file: SR2025_A45_extra_formation_lap.md
+
+    - article: 46
+      title: Delayed start
+      category: starting_procedures
+      file: SR2025_A46_delayed_start.txt
+
+    - article: 47
+      title: Aborted start
+      category: starting_procedures
+      file: SR2025_A47_aborted_start.md
+
+    - article: 48
+      title: False start
+      category: starting_procedures
+      file: SR2025_A48_false_start.md
+
+    - article: 49
+      title: Formation lap(s) behind the safety car
+      category: starting_procedures
+      file: SR2025_A49_formation_lap_sc.md
+
+    - article: 50
+      title: Starting procedure suspended
+      category: starting_procedures
+      file: SR2025_A50_start_suspended.txt
+
+    - article: 51
+      title: Standing start
+      category: starting_procedures
+      file: SR2025_A51_standing_start.txt
+
+    - article: 52
+      title: Rolling start
+      category: starting_procedures
+      file: SR2025_A52_rolling_start.txt
+
+    - article: 53
+      title: Sprint session and the race
+      category: race_management
+      file: SR2025_A53_sprint_and_race.txt
+
+    - article: 54
+      title: Incidents during the sprint session or the race
+      category: race_management
+      file: SR2025_A54_incidents.md
+
+    - article: 55
+      title: Safety car
+      category: race_management
+      file: SR2025_A55_safety_car.md
+
+    - article: 56
+      title: Virtual safety car
+      category: race_management
+      file: SR2025_A56_virtual_safety_car.md
+
+    - article: 57
+      title: Suspending a sprint session or a race
+      category: race_management
+      file: SR2025_A57_suspend_race.md
+
+    - article: 58
+      title: Resuming a sprint session or a race
+      category: race_management
+      file: SR2025_A58_resume_race.md
+
+    - article: 59
+      title: Finish
+      category: classification
+      file: SR2025_A59_finish.md
+
+    - article: 60
+      title: Post sprint and post race parc fermé
+      category: classification
+      file: SR2025_A60_post_race_parc_ferme.txt
+
+    - article: 61
+      title: Sprint session classification
+      category: classification
+      file: SR2025_A61_sprint_classification.txt
+
+    - article: 62
+      title: Race classification
+      category: classification
+      file: SR2025_A62_race_classification.txt
+
+    - article: 63
+      title: Podium ceremony and post competition press conference
+      category: media_and_protocol
+      file: SR2025_A63_podium_and_press.txt
+
+    - article: 64
+      title: Team equipment
+      category: media_and_protocol
+      file: SR2025_A64_team_equipment.txt
+
+  appendices:
+    - appendix: 1
+      title: Information required by the FIA 90 days before a competition
+      file: SR2025_APP01_info_required_90days.docx
+
+    - appendix: 2
+      title: Entry form
+      file: SR2025_APP02_entry_form.docx
+
+    - appendix: 3
+      title: Driver Contract Recognition Board
+      file: SR2025_APP03_dcrb.docx
+
+    - appendix: 4
+      title: Entry fees
+      file: SR2025_APP04_entry_fees.docx
+
+    - appendix: 5
+      title: Podium ceremony
+      file: SR2025_APP05_podium_ceremony.docx
+
+    - appendix: 6
+      title: Supply of power units
+      file: SR2025_APP06_supply_power_units.docx
+
+    - appendix: 7
+      title: Aerodynamic testing restrictions
+      file: SR2025_APP07_ATR.docx
+
+    - appendix: 8
+      title: Power unit test bench restrictions
+      file: SR2025_APP08_pu_test_bench.docx
+
+    - appendix: 9
+      title: Approved changes for subsequent years
+      file: SR2025_APP09_approved_changes.docx

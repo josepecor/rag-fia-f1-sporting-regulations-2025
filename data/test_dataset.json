@@ -1,0 +1,221 @@
+{
+  "dataset_info": {
+    "name": "F1 2025 Sporting Regulations Test Dataset",
+    "version": "1.0",
+    "language": "en",
+    "created_at": "2024-12-20",
+    "description": "Test queries for evaluating RAG system on F1 2025 sporting regulations"
+  },
+  "test_cases": [
+    {
+      "query_id": "q1",
+      "query": "How many power units can a driver use in a season?",
+      "relevant_articles": [28],
+      "highly_relevant": [28],
+      "partially_relevant": [],
+      "category": "technical_operations",
+      "difficulty": "easy",
+      "expected_keywords": ["power unit", "allocation", "engine", "limit"]
+    },
+    {
+      "query_id": "q2",
+      "query": "What does the regulation say about tyre usage?",
+      "relevant_articles": [30],
+      "highly_relevant": [30],
+      "partially_relevant": [],
+      "category": "technical_operations",
+      "difficulty": "easy",
+      "expected_keywords": ["tyre", "tire", "compound", "allocation"]
+    },
+    {
+      "query_id": "q3",
+      "query": "When is the safety car used?",
+      "relevant_articles": [55],
+      "highly_relevant": [55],
+      "partially_relevant": [54, 56],
+      "category": "race_management",
+      "difficulty": "medium",
+      "expected_keywords": ["safety car", "incident", "track", "deploy"]
+    },
+    {
+      "query_id": "q4",
+      "query": "What is the race starting procedure?",
+      "relevant_articles": [44, 51],
+      "highly_relevant": [44, 51],
+      "partially_relevant": [43, 45, 46, 47],
+      "category": "starting_procedures",
+      "difficulty": "medium",
+      "expected_keywords": ["start", "formation lap", "grid", "lights"]
+    },
+    {
+      "query_id": "q5",
+      "query": "What penalties can be given during a race?",
+      "relevant_articles": [18, 54],
+      "highly_relevant": [18],
+      "partially_relevant": [54],
+      "category": "disciplinary",
+      "difficulty": "medium",
+      "expected_keywords": [
+        "penalty",
+        "sanction",
+        "time penalty",
+        "disqualification"
+      ]
+    },
+    {
+      "query_id": "q6",
+      "query": "What is the virtual safety car and how does it work?",
+      "relevant_articles": [56],
+      "highly_relevant": [56],
+      "partially_relevant": [55],
+      "category": "race_management",
+      "difficulty": "easy",
+      "expected_keywords": ["virtual safety car", "VSC", "delta time"]
+    },
+    {
+      "query_id": "q7",
+      "query": "How are drivers classified in the race?",
+      "relevant_articles": [62],
+      "highly_relevant": [62],
+      "partially_relevant": [61],
+      "category": "classification",
+      "difficulty": "easy",
+      "expected_keywords": ["classification", "finish", "position", "result"]
+    },
+    {
+      "query_id": "q8",
+      "query": "What are the parc fermé regulations?",
+      "relevant_articles": [40, 60],
+      "highly_relevant": [40, 60],
+      "partially_relevant": [],
+      "category": "sessions",
+      "difficulty": "medium",
+      "expected_keywords": ["parc fermé", "parc ferme", "inspection"]
+    },
+    {
+      "query_id": "q9",
+      "query": "What are the factory shutdown restrictions?",
+      "relevant_articles": [24, 25],
+      "highly_relevant": [24, 25],
+      "partially_relevant": [],
+      "category": "operational_constraints",
+      "difficulty": "medium",
+      "expected_keywords": ["shutdown", "factory", "closure", "period"]
+    },
+    {
+      "query_id": "q10",
+      "query": "How does the qualifying system work?",
+      "relevant_articles": [39],
+      "highly_relevant": [39],
+      "partially_relevant": [38, 40],
+      "category": "sessions",
+      "difficulty": "medium",
+      "expected_keywords": ["qualifying", "Q1", "Q2", "Q3", "knockout"]
+    },
+    {
+      "query_id": "q11",
+      "query": "What happens if the race is suspended?",
+      "relevant_articles": [57, 58],
+      "highly_relevant": [57, 58],
+      "partially_relevant": [53, 55],
+      "category": "race_management",
+      "difficulty": "hard",
+      "expected_keywords": ["suspend", "red flag", "resume", "restart"]
+    },
+    {
+      "query_id": "q12",
+      "query": "What are the car weighing regulations?",
+      "relevant_articles": [35],
+      "highly_relevant": [35],
+      "partially_relevant": [31],
+      "category": "driving_and_pitlane",
+      "difficulty": "easy",
+      "expected_keywords": ["weighing", "weight", "minimum", "scale"]
+    },
+    {
+      "query_id": "q13",
+      "query": "What are the pit lane speed limit rules?",
+      "relevant_articles": [34],
+      "highly_relevant": [34],
+      "partially_relevant": [33],
+      "category": "driving_and_pitlane",
+      "difficulty": "easy",
+      "expected_keywords": ["pit lane", "speed limit", "entry", "exit"]
+    },
+    {
+      "query_id": "q14",
+      "query": "What happens if there is a false start?",
+      "relevant_articles": [48],
+      "highly_relevant": [48],
+      "partially_relevant": [44, 47, 51],
+      "category": "starting_procedures",
+      "difficulty": "medium",
+      "expected_keywords": ["false start", "jump start", "penalty"]
+    },
+    {
+      "query_id": "q15",
+      "query": "What are the rules for changing drivers during a season?",
+      "relevant_articles": [32],
+      "highly_relevant": [32],
+      "partially_relevant": [4],
+      "category": "scrutineering",
+      "difficulty": "hard",
+      "expected_keywords": ["driver change", "substitute", "replacement"]
+    },
+    {
+      "query_id": "q16",
+      "query": "What is the podium ceremony procedure?",
+      "relevant_articles": [63],
+      "highly_relevant": [63],
+      "partially_relevant": [19],
+      "category": "media_and_protocol",
+      "difficulty": "easy",
+      "expected_keywords": ["podium", "ceremony", "anthem", "trophy"]
+    },
+    {
+      "query_id": "q17",
+      "query": "Can refuelling be done during the race?",
+      "relevant_articles": [36],
+      "highly_relevant": [36],
+      "partially_relevant": [],
+      "category": "driving_and_pitlane",
+      "difficulty": "easy",
+      "expected_keywords": ["refuelling", "fuel", "prohibited", "banned"]
+    },
+    {
+      "query_id": "q18",
+      "query": "What are the scrutineering requirements?",
+      "relevant_articles": [31],
+      "highly_relevant": [31],
+      "partially_relevant": [32, 35],
+      "category": "scrutineering",
+      "difficulty": "medium",
+      "expected_keywords": [
+        "scrutineering",
+        "inspection",
+        "technical",
+        "compliance"
+      ]
+    },
+    {
+      "query_id": "q19",
+      "query": "How does the sprint qualifying format work?",
+      "relevant_articles": [39, 43],
+      "highly_relevant": [39, 43],
+      "partially_relevant": [61],
+      "category": "sessions",
+      "difficulty": "hard",
+      "expected_keywords": ["sprint", "qualifying", "format", "shootout"]
+    },
+    {
+      "query_id": "q20",
+      "query": "What is the maximum number of team personnel allowed?",
+      "relevant_articles": [23],
+      "highly_relevant": [23],
+      "partially_relevant": [],
+      "category": "operational_constraints",
+      "difficulty": "medium",
+      "expected_keywords": ["personnel", "team members", "staff", "limit"]
+    }
+  ]
+}
