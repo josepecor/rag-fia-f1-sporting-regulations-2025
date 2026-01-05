@@ -1,3 +1,10 @@
+"""
+Ejemplo de cómo importar y usar el chatbot desde scripts/
+
+Este script demuestra la forma correcta de importar módulos 
+desde el directorio src/ cuando se ejecuta desde scripts/
+"""
+
 import os
 import sys
 from pathlib import Path
@@ -16,7 +23,7 @@ project_root = script_dir.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-# Importar desde src/ usando import absoluto
+# Ahora podemos importar desde src/ usando import absoluto
 from src.chatbot import F1RAGChatbot
 
 # ====================================
@@ -24,7 +31,7 @@ from src.chatbot import F1RAGChatbot
 # ====================================
 
 def test_chatbot():
-    """Prueba básica del chatbot"""
+    """Prueba básica del chatbot con nuevas funcionalidades"""
     
     print("\n" + "="*80)
     print("🧪 TEST DEL CHATBOT F1")
@@ -61,17 +68,32 @@ def test_chatbot():
     print(f"Pregunta: {test_question}\n")
     print("Buscando en las regulaciones...\n")
     
+    # Obtener respuesta con formato estructurado
     result = chatbot.query(
         test_question,
         max_results=3,
-        max_total_chars=800
+        max_total_chars=800,
+        generate_answer=True  # Generar respuesta formateada
     )
     
-    print("📄 Contexto encontrado:")
-    print("-" * 80)
+    # Mostrar respuesta generada
+    print("="*80)
+    print("📄 RESPUESTA GENERADA (Formatted Answer):")
+    print("="*80)
+    if 'answer' in result:
+        print(result['answer'])
+    else:
+        print(result['context'])
+    
+    # Mostrar contexto raw para comparación
+    print("\n" + "="*80)
+    print("📚 CONTEXTO RAW (Para debugging):")
+    print("="*80)
     print(result['context'])
-    print("-" * 80)
-    print(f"\n📊 Fuentes utilizadas: {result['num_sources']}")
+    
+    print("\n" + "="*80)
+    print(f"📊 Fuentes utilizadas: {result['num_sources']}")
+    print("="*80)
     
     # Mostrar fuentes detalladas
     if 'sources' in result:
@@ -82,10 +104,14 @@ def test_chatbot():
             print(f"      Categoría: {source['category']}")
             print(f"      Extracto: {source['content'][:100]}...")
     
-    print("\n" + "="*80 + "\n")
+    print("\n" + "="*80)
+    print("💡 COMPARACIÓN:")
+    print("   - 'Respuesta Generada' = Formato estructurado y profesional")
+    print("   - 'Contexto Raw' = Información directa de los documentos")
+    print("="*80 + "\n")
 
 def test_multiple_queries():
-    """Prueba con múltiples consultas"""
+    """Prueba con múltiples consultas mostrando respuestas generadas"""
     
     print("\n" + "="*80)
     print("🧪 TEST MÚLTIPLES CONSULTAS")
@@ -102,18 +128,72 @@ def test_multiple_queries():
     ]
     
     for i, question in enumerate(test_questions, 1):
-        print(f"\n[{i}/{len(test_questions)}] {question}")
-        print("-" * 80)
+        print(f"\n{'='*80}")
+        print(f"[{i}/{len(test_questions)}] {question}")
+        print("="*80)
         
         result = chatbot.query(
             question,
             max_results=2,
-            max_total_chars=400
+            max_total_chars=600,
+            generate_answer=True  # Usar respuestas generadas
         )
         
-        print(result['context'])
-        print(f"\nFuentes: {result['num_sources']}")
-        print("=" * 80)
+        # Mostrar respuesta generada
+        if 'answer' in result:
+            print("\n📄 Respuesta:\n")
+            print(result['answer'])
+        else:
+            print("\n📄 Contexto:\n")
+            print(result['context'])
+        
+        print(f"\n📊 Fuentes: {result['num_sources']}")
+    
+    print("\n" + "="*80 + "\n")
+
+def test_comparison_modes():
+    """Compara respuestas generadas vs contexto raw"""
+    
+    print("\n" + "="*80)
+    print("🧪 COMPARACIÓN: RESPUESTA GENERADA VS CONTEXTO RAW")
+    print("="*80 + "\n")
+    
+    chatbot = F1RAGChatbot()
+    
+    test_question = "If race is not completed to 70% indicate points and positions"
+    
+    print(f"Pregunta: {test_question}\n")
+    
+    # Obtener ambas versiones
+    result_formatted = chatbot.query(
+        test_question,
+        max_results=3,
+        generate_answer=True
+    )
+    
+    result_raw = chatbot.query(
+        test_question,
+        max_results=3,
+        generate_answer=False
+    )
+    
+    # Mostrar modo formateado
+    print("="*80)
+    print("📄 MODO 1: RESPUESTA GENERADA (Usuario final)")
+    print("="*80)
+    print(result_formatted.get('answer', 'N/A'))
+    
+    # Mostrar modo raw
+    print("\n" + "="*80)
+    print("📄 MODO 2: CONTEXTO RAW (Debugging/Desarrollo)")
+    print("="*80)
+    print(result_raw['context'])
+    
+    print("\n" + "="*80)
+    print("💡 ANÁLISIS:")
+    print("   - Modo 1: Profesional, estructurado, listo para usuario")
+    print("   - Modo 2: Directo de documentos, útil para verificar fuentes")
+    print("="*80 + "\n")
 
 def interactive_session():
     """Sesión interactiva con el chatbot"""
@@ -133,7 +213,7 @@ def main():
     parser = argparse.ArgumentParser(description='Test del chatbot F1')
     parser.add_argument(
         '--mode',
-        choices=['test', 'multiple', 'interactive'],
+        choices=['test', 'multiple', 'compare', 'interactive'],
         default='test',
         help='Modo de ejecución (default: test)'
     )
@@ -145,6 +225,8 @@ def main():
             test_chatbot()
         elif args.mode == 'multiple':
             test_multiple_queries()
+        elif args.mode == 'compare':
+            test_comparison_modes()
         elif args.mode == 'interactive':
             interactive_session()
     

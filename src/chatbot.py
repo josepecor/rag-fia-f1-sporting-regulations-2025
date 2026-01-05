@@ -195,12 +195,206 @@ class F1RAGChatbot:
         
         return "\n\n".join(formatted_parts)
     
+    def _generate_answer(self, question: str, context: str) -> str:
+        """
+        Genera una respuesta en lenguaje más natural a partir del contexto
+        
+        Usa templates y reglas para reformular el contexto en una respuesta
+        más conversacional y directa, sin necesidad de LLMs externos
+        
+        Args:
+            question: Pregunta del usuario
+            context: Contexto recuperado de los documentos
+            
+        Returns:
+            Respuesta en lenguaje natural
+        """
+        
+        question_lower = question.lower()
+        
+        # Extraer información clave del contexto
+        articles = self._extract_articles_from_context(context)
+        
+        # Construir respuesta según tipo de pregunta
+        answer_parts = []
+        
+        # ====================================
+        # PREGUNTAS DE CANTIDAD (how many)
+        # ====================================
+        if any(word in question_lower for word in ['how many', 'number of', 'quantity']):
+            # Buscar números en el contexto
+            import re
+            numbers = re.findall(r'\b\d+\b', context)
+            
+            if numbers:
+                answer_parts.append(f"According to the regulations, the answer is **{numbers[0]}**.")
+            else:
+                answer_parts.append("Based on the regulations:")
+            
+            # Añadir explicación simplificada
+            answer_parts.append(self._simplify_context(context, max_sentences=3))
+        
+        # ====================================
+        # PREGUNTAS DE PROCEDIMIENTO (what happens)
+        # ====================================
+        elif any(word in question_lower for word in ['what happens', 'what if', 'procedure']):
+            answer_parts.append("Here's what happens according to the regulations:\n")
+            
+            # Si hay lista de puntos, mantenerla
+            if '-' in context or '•' in context:
+                answer_parts.append(self._format_list_naturally(context))
+            else:
+                answer_parts.append(self._simplify_context(context, max_sentences=4))
+        
+        # ====================================
+        # PREGUNTAS DE PUNTOS/SCORING
+        # ====================================
+        elif any(word in question_lower for word in ['points', 'score', 'scoring']):
+            answer_parts.append("The points allocation works as follows:\n")
+            
+            # Extraer y reformatear tabla/lista de puntos
+            if any(keyword in context.lower() for keyword in ['points', 'awarded', 'classified']):
+                answer_parts.append(self._format_points_table(context))
+            else:
+                answer_parts.append(context)
+        
+        # ====================================
+        # PREGUNTAS DE TIEMPO/CUÁNDO (when)
+        # ====================================
+        elif any(word in question_lower for word in ['when', 'timing', 'time']):
+            answer_parts.append("Regarding timing and conditions:\n")
+            answer_parts.append(self._simplify_context(context, max_sentences=3))
+        
+        # ====================================
+        # PREGUNTAS DE PENALIZACIONES
+        # ====================================
+        elif any(word in question_lower for word in ['penalty', 'penalties', 'sanction']):
+            answer_parts.append("According to the penalty regulations:\n")
+            answer_parts.append(self._simplify_context(context, max_sentences=4))
+        
+        # ====================================
+        # PREGUNTAS GENERALES
+        # ====================================
+        else:
+            answer_parts.append("Based on the FIA regulations:\n")
+            answer_parts.append(self._simplify_context(context, max_sentences=4))
+        
+        # Añadir referencias a artículos si están disponibles
+        if articles:
+            answer_parts.append(f"\n*Reference: {', '.join(articles)}*")
+        
+        return "\n".join(answer_parts)
+    
+    def _extract_articles_from_context(self, context: str) -> List[str]:
+        """Extrae números de artículos del contexto"""
+        import re
+        articles = re.findall(r'\[Article (\d+(?:\.\d+)?)\]', context)
+        return [f"Article {art}" for art in articles]
+    
+    def _simplify_context(self, context: str, max_sentences: int = 3) -> str:
+        """
+        Simplifica el contexto eliminando metadatos y acortando
+        
+        Args:
+            context: Contexto completo
+            max_sentences: Máximo de oraciones a incluir
+            
+        Returns:
+            Contexto simplificado
+        """
+        # Eliminar etiquetas de artículos del inicio
+        import re
+        text = re.sub(r'\[Article \d+(?:\.\d+)?\]\s*', '', context)
+        
+        # Dividir en oraciones
+        sentences = []
+        current = []
+        
+        for line in text.split('\n'):
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Si es una línea de lista, tratarla como una oración
+            if line.startswith('-') or line.startswith('•'):
+                sentences.append(line)
+            else:
+                # Dividir por puntos
+                parts = line.split('. ')
+                sentences.extend([p.strip() + '.' if not p.endswith('.') else p.strip() for p in parts if p.strip()])
+        
+        # Tomar solo las primeras N oraciones
+        result = '\n'.join(sentences[:max_sentences * 2])  # *2 porque listas cuentan como oraciones
+        
+        return result
+    
+    def _format_list_naturally(self, context: str) -> str:
+        """Formatea listas de manera más natural"""
+        lines = context.split('\n')
+        formatted = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Eliminar etiquetas de artículos
+            line = line.replace('[Article ', '').replace(']', '').strip()
+            
+            # Si comienza con número de artículo, saltarlo
+            if line and line[0].isdigit() and line[1:3] in ['. ', ' ']:
+                continue
+            
+            # Reformular bullets
+            if line.startswith('-'):
+                # Cambiar "- " por "• "
+                line = '• ' + line[1:].strip()
+            
+            formatted.append(line)
+        
+        return '\n'.join(formatted)
+    
+    def _format_points_table(self, context: str) -> str:
+        """
+        Formatea tablas de puntos de manera más legible
+        
+        Args:
+            context: Contexto con información de puntos
+            
+        Returns:
+            Tabla formateada
+        """
+        lines = context.split('\n')
+        formatted = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Eliminar etiquetas de artículos
+            line = line.replace('[Article ', '').replace(']', '')
+            
+            # Si es un encabezado, resaltarlo
+            if any(word in line.lower() for word in ['points', 'allocation', 'system']):
+                continue  # Saltar encabezados redundantes
+            
+            # Si es una condición de puntos, formatearla
+            if any(symbol in line for symbol in [':', '-', '•']):
+                # Ya está formateada, mantenerla
+                formatted.append(line)
+            else:
+                formatted.append(line)
+        
+        return '\n'.join(formatted)
+    
     def query(
         self, 
         question: str, 
         return_sources: bool = True,
         max_results: int = 3,
-        max_total_chars: int = 800
+        max_total_chars: int = 800,
+        generate_answer: bool = True
     ) -> Dict:
         """
         Realiza una consulta optimizada al chatbot
@@ -209,18 +403,21 @@ class F1RAGChatbot:
         1. Recupera documentos usando búsqueda vectorial
         2. Re-rankea por relevancia real
         3. Formatea y limita el contexto
-        4. Retorna resultado estructurado
+        4. Genera respuesta estructurada (opcional)
+        5. Retorna resultado estructurado
         
         Args:
             question: Pregunta del usuario
             return_sources: Si True, devuelve los documentos fuente completos
             max_results: Máximo número de documentos a devolver
             max_total_chars: Máximo de caracteres en el contexto total
+            generate_answer: Si True, genera respuesta estructurada
             
         Returns:
             Dict con:
                 - question: La pregunta original
-                - context: Contexto formateado
+                - answer: Respuesta generada (si generate_answer=True)
+                - context: Contexto formateado (raw)
                 - num_sources: Número de fuentes usadas
                 - sources: (opcional) Lista de documentos fuente
         """
@@ -244,6 +441,10 @@ class F1RAGChatbot:
             'context': context,
             'num_sources': len(docs),
         }
+        
+        # Generar respuesta estructurada si se solicita
+        if generate_answer:
+            response['answer'] = self._generate_answer(question, context)
         
         if return_sources:
             sources = []
@@ -298,8 +499,11 @@ class F1RAGChatbot:
         print("\nCommands:")
         print("  - Type your question in English")
         print("  - Type 'info' to see model information")
+        print("  - Type 'raw' to toggle raw context mode")
         print("  - Type 'exit' or 'quit' to exit")
         print("="*80 + "\n")
+        
+        show_raw = False
         
         while True:
             try:
@@ -317,14 +521,30 @@ class F1RAGChatbot:
                     print()
                     continue
                 
+                if question.lower() == 'raw':
+                    show_raw = not show_raw
+                    mode = "RAW CONTEXT" if show_raw else "FORMATTED ANSWER"
+                    print(f"\n🔄 Mode switched to: {mode}\n")
+                    continue
+                
                 if not question:
                     continue
                 
                 print(f"\n🔍 Searching regulations...")
-                result = self.query(question, max_results=3, max_total_chars=800)
+                result = self.query(
+                    question, 
+                    max_results=3, 
+                    max_total_chars=800,
+                    generate_answer=not show_raw
+                )
                 
-                print(f"\n📄 Answer:\n")
-                print(result['context'])
+                print(f"\n📄 {'Answer' if not show_raw else 'Raw Context'}:\n")
+                
+                if show_raw:
+                    print(result['context'])
+                else:
+                    print(result.get('answer', result['context']))
+                
                 print(f"\n📊 Sources: {result['num_sources']}")
                 print("\n" + "="*80 + "\n")
                 
@@ -349,15 +569,34 @@ def main():
     print("="*80 + "\n")
     
     # Realizar consulta de prueba
+    question = "If race is not completed to 70% indicate points and positions"
+    
+    print(f"Question: {question}\n")
+    print("🔍 Searching regulations...\n")
+    
+    # Obtener respuesta con formato estructurado
     result = chatbot.query(
-        "If race is not completed to 70% indicate points and positions",
-        max_results=2,
-        max_total_chars=600
+        question,
+        max_results=3,
+        max_total_chars=800,
+        generate_answer=True  # Generar respuesta formateada
     )
     
-    print(f"Question: {result['question']}\n")
-    print(f"Context:\n{result['context']}\n")
-    print(f"Sources: {result['num_sources']}")
+    print("="*80)
+    print("📄 FORMATTED ANSWER:")
+    print("="*80)
+    print(result.get('answer', result['context']))
+    print("\n" + "="*80)
+    print("📚 RAW CONTEXT (for debugging):")
+    print("="*80)
+    print(result['context'])
+    print("\n" + "="*80)
+    print(f"📊 Sources used: {result['num_sources']}")
+    print("="*80 + "\n")
+    
+    # Mostrar ejemplo de modo interactivo
+    print("💡 TIP: Run chatbot.interactive_mode() for an interactive session")
+    print("        Type 'raw' in interactive mode to toggle between formatted/raw output\n")
     
     # Modo interactivo (descomentar para usar)
     # chatbot.interactive_mode()
