@@ -8,7 +8,9 @@ Imagina buscar una regla específica en el reglamento deportivo de Fórmula 1 20
 
 El desafío no era solo encontrar información, sino **garantizar que cada respuesta fuera verificable y trazable** hasta su fuente original en las regulaciones oficiales.
 
-**La solución: RAG (Retrieval-Augmented Generation)**
+---
+
+## La solución: RAG (Retrieval-Augmented Generation)
 
 En lugar de depender únicamente de lo que un modelo "recuerda" de su entrenamiento, RAG combina dos capacidades:
 
@@ -23,14 +25,16 @@ Este enfoque no solo resuelve el problema de la fiabilidad, sino que transforma 
 
 ## Los documentos utilizados
 
-El sistema RAG se alimenta exclusivamente de documentación oficial.
+El sistema RAG trabaja con distintos formatos documentales a lo largo de su pipeline.
 
-- **PDF**: documento original, de la reglamentacion deportiva.
-- **Markdown (.md)**: Su contenido son articulos densos con secciones y subsecciones.
-- **Texto Plano (.txt)**: Su contenido son articulos menos densos, las secciones no contienen subsecciones.
-- **CSV**: datos tabulares (puntos, clasificaciones, resultados).
-- **JSON**: utilizado para realizar el Custionario de pregunta respuesta para realizar la evaluacion del modelo.
-- **YAML**: utilizado para realizar el procesado de los datos en crudo que son los que fueron creados de forma manual.
+No todos los formatos cumplen el mismo rol dentro del sistema: algunos forman parte de la base de conocimiento indexada y recuperable por el asistente, mientras que otros se utilizan como soporte para el procesado, estructuración y evaluación del sistema.
+
+- **PDF**: documento original de la reglamentación deportiva. Forma parte del conocimiento base del asistente.
+- **Markdown (.md)**: artículos densos con secciones y subsecciones, utilizados como conocimiento estructurado para el RAG.
+- **Texto plano (.txt)**: artículos menos densos sin subsecciones, utilizados como conocimiento complementario.
+- **CSV**: datos tabulares (puntos, clasificaciones, resultados) empleados como información estructurada de apoyo.
+- **JSON**: utilizado para construir el cuestionario de preguntas y respuestas empleado en la evaluación del sistema.
+- **YAML**: utilizado en el procesado de los datos en crudo, creados manualmente durante la fase de preparación de la información.
 
 ---
 
@@ -112,13 +116,45 @@ La decisión fue práctica, no ideológica:
 
 Tras realizar test manuales, se encontro que ciertas preguntas contenian mas contexto del deseado incluyendo en la respuesta información adicional que no esperaba.
 
-a la pregunta de cuales eran los puntos y posiciones si no se finalizaba el 75% de la carrera, respondia correctamente, pero aportaba mas información que solo las posiciones y puntuaciones, como que minimo se tenia que disputar 2 vueltras en bandera verde.
+A la pregunta de cuales eran los puntos y posiciones si no se finalizaba el 75% de la carrera, respondia correctamente, pero aportaba mas información que solo las posiciones y puntuaciones, como que minimo se tenia que disputar 2 vueltras en bandera verde.
 
 En otras preguntas directamente daba respuestas inclorrectas, si que tenia el contexto pero era completamente erronea.
 
-a la pregunta puntos y si la carrera finalizaba de forma completa, respondia que solo puntan los 8 primeros cuando en la realidad son 10, es posible que no entienda la pregunta ya que la carrera sprint si que son los 8 primeros y eso le confunda, por hacer preguntas con poco contexto.
+A la pregunta puntos y si la carrera finalizaba de forma completa, respondia que solo puntan los 8 primeros cuando en la realidad son 10, es posible que no entienda la pregunta ya que la carrera sprint si que son los 8 primeros y eso le confunda, por hacer preguntas con poco contexto.
 
 En esta primera versión aun teniendo el mejor modelo del ensayo le falta mejorar.
+
+---
+
+## Mejoras
+
+## Mejora propuesta del sistema RAG
+
+## Mejora propuesta del sistema RAG
+
+Como parte del análisis de posibles mejoras del sistema RAG, se exploraron distintas estrategias orientadas a incrementar la precisión y coherencia de las respuestas generadas, así como a reducir errores derivados de la recuperación de contexto.
+
+Una de las aproximaciones evaluadas consistió en modificar la estrategia de preprocesado documental, dividiendo cada artículo en secciones independientes antes de su indexación. La hipótesis inicial era que una segmentación más fina permitiría recuperar fragmentos más específicos y directamente relacionados con la consulta del usuario.
+
+Sin embargo, los resultados obtenidos mostraron respuestas más incompletas y con menor coherencia global, debido principalmente a la pérdida de contexto entre secciones relacionadas del mismo artículo. Esta fragmentación excesiva dificultó la reconstrucción del significado completo de ciertas normas, por lo que la estrategia fue descartada tras su evaluación, manteniéndose una segmentación que preserva mayor continuidad semántica entre fragmentos.
+
+Como complemento al sistema base, se incorporó una fase de postprocesado de las respuestas orientada a mejorar su legibilidad y naturalidad, sin alterar el contenido factual recuperado. Esta mejora tiene un impacto principalmente en la experiencia de uso del asistente, pero no modifica el proceso de recuperación ni la exactitud de la información proporcionada.
+
+Finalmente, se identifican como líneas futuras de mejora la especialización del sistema en múltiples modelos orientados a distintas categorías normativas, aprovechando la clasificación existente en los ficheros YAML. Esta aproximación permitiría reducir el espacio de búsqueda de cada modelo y, mediante un mecanismo de orquestación de intenciones, construir un sistema más escalable y potencialmente más preciso, donde cada componente se especialice en un subconjunto concreto de la normativa.
+
+---
+
+## Conlusiones
+
+La primera lección extraída de este proyecto es que un sistema RAG y un modelo LLM no representan la misma arquitectura de interpretación del lenguaje natural, aunque pueden complementarse. Mientras que un LLM opera principalmente sobre el conocimiento implícito adquirido durante su entrenamiento, un sistema RAG fundamenta sus respuestas en información externa recuperada dinámicamente, lo que resulta clave en contextos donde la trazabilidad y la fidelidad a las fuentes son requisitos esenciales.
+
+Otro aspecto fundamental identificado es la importancia del procesado y la estructuración previa de la información incorporada al sistema RAG. La forma en que se agrupa o segmenta el contenido antes de su indexación tiene un impacto directo en la calidad de las respuestas. En particular, parámetros como el tamaño de los fragmentos de texto y el grado de solapamiento entre ellos resultan determinantes para lograr un equilibrio adecuado entre cobertura contextual y precisión semántica, como se ha observado al evaluar distintas estrategias de segmentación documental.
+
+Asimismo, el modelo base empleado actúa como traductor de intenciones entre la consulta del usuario y el conocimiento recuperado. La elección de este modelo condiciona aspectos como el idioma de entrada y la correcta interpretación de las preguntas planteadas. Si el modelo no está alineado con el lenguaje utilizado en las consultas, la recuperación de información y la posterior construcción de respuestas se ven inevitablemente afectadas, independientemente de la calidad del sistema RAG subyacente.
+
+En relación con el prompting, el proyecto ha puesto de manifiesto que los ajustes realizados a nivel del prompt conversacional del chatbot tienen un impacto limitado sobre la precisión factual de las respuestas en un sistema RAG. Este resultado refuerza la idea de que, en arquitecturas basadas en recuperación de contexto, la calidad del sistema depende principalmente de la fase de recuperación, del preprocesado de los documentos y de los criterios utilizados para seleccionar y presentar la evidencia, más que del estilo conversacional del asistente.
+
+Finalmente, se observa que concentrar grandes volúmenes de información heterogénea en un único modelo puede incrementar el riesgo de respuestas ambiguas o incompletas cuando existen contenidos similares. Como línea futura de mejora, la segmentación del conocimiento en modelos especializados por categoría normativa, junto con un mecanismo de orquestación de intenciones, se presenta como una estrategia prometedora para reducir errores y mejorar la precisión global del sistema.
 
 ## Inicialización y Uso
 
@@ -158,6 +194,9 @@ python3 ./script/test_chatbot.py --mode multiple
 
 # Modo Interactive: carga el mejor modelo guardado y ejecuta tipo consulta respuesta, es decir la consulta se puede hacer de forma personalizada
 python3 ./script/test_chatbot.py --mode interactive
+
+# Modo Compare: dada una consulta debuelve el resultado sin tratat y tratado con el system prompt y algo mas de codigo
+python3 ./script/test_chatbot.py --mode compare
 ```
 
 Ejecuta la interfaz de usuario grafica creada con streamlit
