@@ -128,10 +128,6 @@ En esta primera versión aun teniendo el mejor modelo del ensayo le falta mejora
 
 ## Mejoras
 
-## Mejora propuesta del sistema RAG
-
-## Mejora propuesta del sistema RAG
-
 Como parte del análisis de posibles mejoras del sistema RAG, se exploraron distintas estrategias orientadas a incrementar la precisión y coherencia de las respuestas generadas, así como a reducir errores derivados de la recuperación de contexto.
 
 Una de las aproximaciones evaluadas consistió en modificar la estrategia de preprocesado documental, dividiendo cada artículo en secciones independientes antes de su indexación. La hipótesis inicial era que una segmentación más fina permitiría recuperar fragmentos más específicos y directamente relacionados con la consulta del usuario.
