@@ -1,3 +1,6 @@
+# ====================================
+# f1_chatbot_app.py - Versión simplificada sin LLMs externos
+# ====================================
 
 import streamlit as st
 import os
@@ -225,10 +228,12 @@ def process_question(question: str):
             question, 
             return_sources=True,
             max_results=3,
-            max_total_chars=800
+            max_total_chars=800,
+            generate_answer=True  # Usar respuesta generada y formateada
         )
         
-        response_text = result['context']
+        # Usar la respuesta generada (más estructurada) en lugar del contexto crudo
+        response_text = result.get('answer', result['context'])
         sources = result.get('sources', [])
         
         # Agregar respuesta del asistente
