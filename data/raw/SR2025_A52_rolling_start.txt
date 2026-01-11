@@ -1,0 +1,8 @@
+# Article 52 – Rolling start
+
+## 52.1 If, after one or more formation laps behind the safety car, the track conditions are considered unsuitable to start the sprint session or the race from a standing start, the message “ROLLING START” will be sent to all Competitors using the official messaging system, all FIA light panels will display “RS” and the car’s orange lights will be extinguished. This will be the signal to the Competitors and drivers that it will be entering the pit lane at the end of that lap.
+At this point the first car in line behind the safety car may dictate the pace and, if necessary, fall more than ten (10) car lengths behind it.
+
+## 52.2 As the safety car is approaching the pit entry road the FIA light panels will be extinguished and a green flag and/or green light panel will be displayed at the Line.
+No driver may overtake another car on the track until he passes the Line (see Article 5.3) for the first time after the safety car has returned to the pits. The sprint session or the race will be deemed to have started when the leading car crosses the Line after the safety car has returned to the pits.
+In accordance with Article 49.3, cars that were required to start the sprint session or the race from the pit lane must re-enter the pit lane and may start the sprint session or the race once the last car has passed the pit exit after the start. A penalty in accordance with Article 54.3d) will be imposed on any driver who fails to start the sprint session or race from the pit lane.
