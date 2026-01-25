@@ -55,64 +55,46 @@ Después, se procesaron los ficheros en crudo, cambaindolos texto y agregando la
 En lugar de elegir un modelo "porque sí", se diseño un experimento sistemático que evaluó **9 configuraciones diferentes**:
 
 - 3 modelos de embeddings
+  - sentence-transformers/all-MiniLM-L6-v2
+  - sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  - BAAI/bge-small-en-v1.5
+
 - 3 estrategias de chunking (500, 1000, 2000 caracteres)
-- Evaluación con 30+ queries reales
+- Evaluación con 20 queries reales
 
 Cada configuración fue medida con múltiples métricas: F1 Score, NDCG, Precision@K, MAP, y MRR.
 
-**Ventajas clave:**
-
-- ✅ **Entrenado específicamente para retrieval**, no solo similitud semántica general
-- ✅ **Balance perfecto**: 384 dimensiones capturan la semántica sin sobrecarga
-- ✅ **Consistencia**: Destaca especialmente en queries difíciles con múltiples artículos
-- ✅ **Eficiente**: 133MB, rápido, y funciona en CPU
-
 **¿Por qué no usar modelos más grandes?**
 
-1. El dominio es inglés técnico (su especialidad)
+1. El dominio del inglés técnico, en modelos mas simples
 2. La optimización del chunking importa tanto como el modelo
 3. Modelos pequeños bien optimizados > modelos grandes sin optimizar
 
-### Estrategia de Chunking: 1000 caracteres con overlap de 200
+### Estrategia de segmentación del conocimiento (chunking)
 
-**El experimento reveló un patrón claro:**
+Dado que los documentos analizados son textos largos y con reglas que dependen del contexto, se aplicó una estrategia de _chunking_ para dividir el contenido en fragmentos y facilitar su indexación y recuperación.
 
-```
-Chunk 500:   F1=0.798 → Pierde contexto
-Chunk 1000:  F1=0.847 → Sweet spot ✓
-Chunk 2000:  F1=0.812 → Demasiado genérico
-```
+Se evaluaron distintos tamaños de fragmento (_chunk size_), concretamente **500**, **1000** y **2000**, con el objetivo de analizar el impacto del tamaño del contexto en la calidad de recuperación con un solapamiento (_chunk overlap_) del **20%**.
 
-**¿Por qué 1000 funcionó mejor?**
+### Resultado del Experimento
 
-Las regulaciones F1 tienen una estructura natural:
+La configuración final seleccionada, es con el modelo **sentence-transformers/all-MiniLM-L6-v2**, un solapamiento utilizado es de **400** para fragmentos de **2000**, con el objetivo de preservar continuidad semántica entre fragmentos consecutivos y reducir la pérdida de información relevante en los límites del corte.
 
-- Párrafo principal (200-400 chars)
-- Bullet points o sub-secciones (300-600 chars)
-- Contexto adicional (100-200 chars)
+### Base de datos vectorial (FAISS)
 
-**Total ≈ 800-1000 caracteres** por concepto completo.
-
-Chunks de 500 partían conceptos a la mitad. Chunks de 2000 mezclaban conceptos no relacionados. **1000 caracteres captura exactamente un concepto completo** con su contexto.
-
-El overlap de 200 asegura que no perdamos información en los "bordes" entre chunks.
-
-### Vector Database: FAISS
-
-La decisión fue práctica, no ideológica:
+Para el almacenamiento y recuperación de los embeddings se utilizó FAISS (Facebook AI Similarity Search), una librería optimizada para la búsqueda eficiente por similitud, devolviendo los fragmentos más cercanos al embedding de la consulta.
 
 **Ventajas de FAISS:**
 
-- ⚡ **Velocidad**: ~8ms por query
-- 💰 **Costo**: $0 (local) vs. servicios de pago ($X/mes)
-- 🔒 **Privacidad**: Datos completamente locales
-- 📦 **Simplicidad**: No requiere infraestructura adicional obligatoria (Docker, servidores)
-- 💾 **Eficiencia**: ~2.3 MB de índice para 1,500 chunks
-- 🚀 **Deploy**: Funciona en cualquier servidor ? Ordenador con pocos recursos
+- **Simplicidad de integración:** permite implementar un sistema de recuperación vectorial sin necesidad de infraestructuras externas o servicios cloud.
+- **Buen rendimiento computacional:** ofrece tiempos de búsqueda reducidos incluso con un número elevado de fragmentos.
+- **Control total del pipeline:** facilita el análisis y la depuración del comportamiento del sistema RAG al no depender de componentes opacos.
+- **Reproducibilidad:** al ser una solución local y open-source, garantiza que los experimentos puedan ser replicados fácilmente.
+- **Adecuado para prototipos y proyectos académicos:** proporciona un equilibrio óptimo entre funcionalidad, rendimiento y facilidad de uso.
 
 ---
 
-## Evaluación
+## Evaluación del modelo seleccionado
 
 Tras realizar test manuales, se encontro que ciertas preguntas contenian mas contexto del deseado incluyendo en la respuesta información adicional que no esperaba.
 
@@ -140,7 +122,7 @@ Finalmente, se identifican como líneas futuras de mejora la especialización de
 
 ---
 
-## Conlusiones
+## Conclusiones
 
 La primera lección extraída de este proyecto es que un sistema RAG y un modelo LLM no representan la misma arquitectura de interpretación del lenguaje natural, aunque pueden complementarse. Mientras que un LLM opera principalmente sobre el conocimiento implícito adquirido durante su entrenamiento, un sistema RAG fundamenta sus respuestas en información externa recuperada dinámicamente, lo que resulta clave en contextos donde la trazabilidad y la fidelidad a las fuentes son requisitos esenciales.
 
@@ -150,7 +132,9 @@ Asimismo, el modelo base empleado actúa como traductor de intenciones entre la 
 
 En relación con el prompting, el proyecto ha puesto de manifiesto que los ajustes realizados a nivel del prompt conversacional del chatbot tienen un impacto limitado sobre la precisión factual de las respuestas en un sistema RAG. Este resultado refuerza la idea de que, en arquitecturas basadas en recuperación de contexto, la calidad del sistema depende principalmente de la fase de recuperación, del preprocesado de los documentos y de los criterios utilizados para seleccionar y presentar la evidencia, más que del estilo conversacional del asistente.
 
-Finalmente, se observa que concentrar grandes volúmenes de información heterogénea en un único modelo puede incrementar el riesgo de respuestas ambiguas o incompletas cuando existen contenidos similares. Como línea futura de mejora, la segmentación del conocimiento en modelos especializados por categoría normativa, junto con un mecanismo de orquestación de intenciones, se presenta como una estrategia prometedora para reducir errores y mejorar la precisión global del sistema.
+Finalmente, se observa que concentrar grandes volúmenes de información heterogénea en un único modelo puede incrementar el riesgo de respuestas ambiguas o incompletas cuando existen contenidos similares.
+
+Como línea futura de mejora, la segmentación del conocimiento en modelos especializados por categoría normativa, junto con un mecanismo de orquestación de intenciones, se presenta como una estrategia prometedora para reducir errores y mejorar la precisión global del sistema.
 
 ## Inicialización y Uso
 
