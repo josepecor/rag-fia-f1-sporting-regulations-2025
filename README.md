@@ -1,5 +1,22 @@
 # RAG FIA F1 Sporting Regulations 2025
 
+## Índice
+
+- [El problema](#el-problema)
+- [La solución: RAG (Retrieval-Augmented Generation)](#la-solución-rag-retrieval-augmented-generation)
+- [Los documentos utilizados](#los-documentos-utilizados)
+- [Preparación de los datos para el RAG](#preparación-de-los-datos-para-el-rag)
+- [Elección del Modelo y Vector Database](#elección-del-modelo-y-vector-database)
+  - [El Enfoque: Experimentación sobre Intuición](#el-enfoque-experimentación-sobre-intuición)
+  - [Estrategia de segmentación del conocimiento (chunking)](#estrategia-de-segmentación-del-conocimiento-chunking)
+  - [Resultado del Experimento](#resultado-del-experimento)
+  - [Base de datos vectorial (FAISS)](#base-de-datos-vectorial-faiss)
+- [Evaluación del modelo seleccionado](#evaluación-del-modelo-seleccionado)
+- [Mejoras](#mejoras)
+- [Conclusiones](#conclusiones)
+- [Capturas Pantalla](#capturas-pantalla)
+- [Inicialización y Uso](#inicialización-y-uso)
+
 ## El problema
 
 Este proyecto nace de una pregunta muy concreta: **¿cómo conseguir respuestas precisas cuando la información está dispersa en cientos de páginas de documentos técnicos complejos?**
@@ -19,7 +36,9 @@ En lugar de depender únicamente de lo que un modelo "recuerda" de su entrenamie
 
 El resultado es un sistema que **nunca inventa**. Cada afirmación está respaldada por el texto original de las regulaciones, con referencias directas a los artículos correspondientes. Si la información no existe en los documentos, el sistema lo indica claramente en lugar de especular.
 
-Este enfoque no solo resuelve el problema de la fiabilidad, sino que transforma 300+ páginas de regulaciones técnicas en un asistente conversacional que responde en segundos con información verificable y trazable.
+Este enfoque no solo resuelve el problema de la fiabilidad, sino que transforma 300+ páginas de regulaciones técnicas en un asistente conversacional que responde en segundos con información verificable y trazable con una interfaz grafica de chatbot.
+
+![Chatbot GUI](Images/ChatbotGUI.jpeg)
 
 ---
 
@@ -29,7 +48,7 @@ El sistema RAG trabaja con distintos formatos documentales a lo largo de su pipe
 
 No todos los formatos cumplen el mismo rol dentro del sistema: algunos forman parte de la base de conocimiento indexada y recuperable por el asistente, mientras que otros se utilizan como soporte para el procesado, estructuración y evaluación del sistema.
 
-- **PDF**: documento original de la reglamentación deportiva. Forma parte del conocimiento base del asistente.
+- **PDF**: documento original de la reglamentación deportiva. Forma parte del conocimiento base del asistente. [fia_2025_formula_1_sporting_regulations](https://www.fia.com/system/files/documents/fia_2025_formula_1_sporting_regulations_-_issue_4_-_2025-02-26.pdf)
 - **Markdown (.md)**: artículos densos con secciones y subsecciones, utilizados como conocimiento estructurado para el RAG.
 - **Texto plano (.txt)**: artículos menos densos sin subsecciones, utilizados como conocimiento complementario.
 - **CSV**: datos tabulares (puntos, clasificaciones, resultados) empleados como información estructurada de apoyo.
@@ -136,11 +155,28 @@ Finalmente, se observa que concentrar grandes volúmenes de información heterog
 
 Como línea futura de mejora, la segmentación del conocimiento en modelos especializados por categoría normativa, junto con un mecanismo de orquestación de intenciones, se presenta como una estrategia prometedora para reducir errores y mejorar la precisión global del sistema.
 
+## Capturas Pantalla
+
+Chatbot desde interfaz gráfica con pregunta predefinida
+
+![Chatbot GUI QA 01](Images/ChatbotGUI_02.gif)
+
+Chatbot desde interfaz gráfica con pregunta del usuario
+
+![Chatbot GUI QA 02](Images/ChatbotGUI_03.gif)
+
+Chatbot desde linea de comandos
+
+![Chatbot CLI](Images/ChatbotCLI_01.gif)
+
 ## Inicialización y Uso
 
 Proyecto realizado con la versión 3.11 de python, no se puede garantizar que con versiones inferiores funcione todas la librerias y garantizado que versiones posteriores librerias LangChain aun no son compatibles
 
 ```bash
+# Clonar repositorio
+git clone https://github.com/josepecor/rag-fia-f1-sporting-regulations-2025.git
+
 # Crear entorno virtual con version especifica
 python3.11 -m venv .venv
 
